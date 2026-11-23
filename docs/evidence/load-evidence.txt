@@ -1,0 +1,20 @@
+Date: 2026-10-20T08:50:31.126805100Z
+Java: 21.0.12.1
+OS: Windows 11 amd64
+Logical processors: 32
+PG: PostgreSQL 17.11 on x86_64-windows, compiled by msvc-19.44.35228, 64-bit
+fsync=on; synchronous_commit=on
+Transport: loopback HTTP; Hikari pool=12; rate limits read/write=1000000/min/IP
+Initial data: 100000 roots + 50000 same-parent children
+Clients: 50 readers + 10 writers; max 5 requests/second/client
+Warmup seconds: 300
+Measured seconds: 60
+Warmup errors: 0
+Read successes: 14802
+Write successes: 2962
+Measured failures: 0
+Status counts: {200=14802, 201=2962}
+Read p95 ms: 4.0845
+Write p95 ms: 4.381
+Read throughput/s: 246.7
+Write throughput/s: 49.36666666666667

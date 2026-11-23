@@ -1,0 +1,60 @@
+server:
+  address: ${SERVER_ADDRESS:127.0.0.1}
+  port: ${PORT:8080}
+  forward-headers-strategy: none
+  servlet:
+    session:
+      timeout: 30m
+      cookie:
+        http-only: true
+        same-site: lax
+        secure: ${COOKIE_SECURE:false}
+spring:
+  application:
+    name: message-board
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      # 三张图片各 5 MB，给 multipart 边界和字段留出少量空间。
+      max-request-size: 16MB
+      file-size-threshold: 0
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://127.0.0.1:5432/message_board}
+    username: ${DATABASE_USER:message_board}
+    password: ${DATABASE_PASSWORD:}
+    hikari:
+      maximum-pool-size: 12
+      connection-timeout: 5000
+      connection-init-sql: "SET statement_timeout = '5s'; SET lock_timeout = '2s'"
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: true
+  mvc:
+    log-request-details: false
+mybatis:
+  type-handlers-package: dev.messageboard.common
+  configuration:
+    map-underscore-to-camel-case: true
+    arg-name-based-constructor-auto-mapping: true
+    default-statement-timeout: 5
+board:
+  admin-user-ids: ${ADMIN_USER_IDS:}
+  public-url: ${PUBLIC_URL:http://127.0.0.1:5173}
+  mail:
+    from: ${MAIL_FROM:}
+  auth:
+    blocked-passwords: ${BLOCKED_PASSWORDS:}
+  upload-dir: ${UPLOAD_DIR:../.runtime/uploads}
+  upload:
+    user-daily-bytes: ${UPLOAD_USER_DAILY_BYTES:104857600}
+    pending-bytes: ${UPLOAD_PENDING_BYTES:52428800}
+  cursor-secret: ${CURSOR_SECRET:}
+  require-stable-secrets: ${REQUIRE_STABLE_SECRETS:false}
+  session-absolute-seconds: 604800
+  rate:
+    read: ${RATE_READ:600}
+    auth: ${RATE_AUTH:30}
+    write: ${RATE_WRITE:60}
+logging:
+  level:
+    org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer: ERROR

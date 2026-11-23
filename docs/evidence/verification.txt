@@ -1,0 +1,9 @@
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 22.61 s -- in dev.messageboard.BoardIntegrationTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.34 s -- in dev.messageboard.HttpRateIntegrationTest
+[WARNING] Tests run: 1, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 0.001 s -- in dev.messageboard.LoadAcceptanceTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s -- in dev.messageboard.RateLimiterTest
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 1
+[INFO] BUILD SUCCESS
+✓ built in 702ms
+ Test Files  2 passed (2)
+      Tests  8 passed (8)

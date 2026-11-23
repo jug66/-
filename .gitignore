@@ -1,0 +1,15 @@
+node_modules/
+dist/
+target/
+.tools/
+.runtime/
+.env
+output/
+*.log
+.idea/
+.vscode/
+.playwright-cli/
+*.tsbuildinfo
+count_ranges.py
+input.txt
+range_output.txt

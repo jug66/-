@@ -1,0 +1,86 @@
+PostgreSQL: PostgreSQL 17.11 on x86_64-windows, compiled by msvc-19.44.35228, 64-bit
+Rows: 160083
+Wide children: 50000; deep chain: 10001; root fixtures: 100000
+Single-thread service page, 20 warmup + 100 measured; p95 ms=1.7606
+Not a 50-reader/10-writer HTTP load acceptance.
+
+ROOT:
+Limit  (cost=1.15..83.28 rows=21 width=602) (actual time=0.103..0.174 rows=21 loops=1)
+  Buffers: shared hit=70
+  ->  Nested Loop Left Join  (cost=1.15..391602.35 rows=100127 width=602) (actual time=0.103..0.171 rows=21 loops=1)
+        Buffers: shared hit=70
+        ->  Nested Loop Left Join  (cost=1.00..13831.31 rows=100127 width=359) (actual time=0.089..0.109 rows=21 loops=1)
+              Buffers: shared hit=7
+              ->  Nested Loop  (cost=0.57..10051.48 rows=100127 width=343) (actual time=0.024..0.037 rows=21 loops=1)
+                    Buffers: shared hit=7
+                    ->  Index Scan Backward using comment_roots_time on comment c  (cost=0.42..7565.82 rows=100127 width=85) (actual time=0.010..0.014 rows=21 loops=1)
+                          Buffers: shared hit=5
+                    ->  Memoize  (cost=0.15..0.17 rows=1 width=274) (actual time=0.001..0.001 rows=1 loops=21)
+                          Cache Key: c.author_id
+                          Cache Mode: logical
+                          Hits: 20  Misses: 1  Evictions: 0  Overflows: 0  Memory Usage: 1kB
+                          Buffers: shared hit=2
+                          ->  Index Scan using board_user_pkey on board_user u  (cost=0.14..0.16 rows=1 width=274) (actual time=0.010..0.010 rows=1 loops=1)
+                                Index Cond: (id = c.author_id)
+                                Buffers: shared hit=2
+              ->  Memoize  (cost=0.43..0.56 rows=1 width=32) (actual time=0.003..0.003 rows=0 loops=21)
+                    Cache Key: c.parent_id
+                    Cache Mode: logical
+                    Hits: 20  Misses: 1  Evictions: 0  Overflows: 0  Memory Usage: 1kB
+                    ->  Index Scan using comment_pkey on comment p  (cost=0.42..0.55 rows=1 width=32) (actual time=0.003..0.004 rows=0 loops=1)
+                          Index Cond: (id = c.parent_id)
+        ->  Memoize  (cost=0.15..0.17 rows=1 width=274) (actual time=0.000..0.000 rows=0 loops=21)
+              Cache Key: p.author_id
+              Cache Mode: logical
+              Hits: 20  Misses: 1  Evictions: 0  Overflows: 0  Memory Usage: 1kB
+              ->  Index Scan using board_user_pkey on board_user pu  (cost=0.14..0.16 rows=1 width=274) (actual time=0.003..0.003 rows=0 loops=1)
+                    Index Cond: (id = p.author_id)
+        SubPlan 1
+          ->  Limit  (cost=0.42..3.75 rows=1 width=25) (actual time=0.002..0.002 rows=0 loops=21)
+                Buffers: shared hit=63
+                ->  Index Only Scan using comment_children_time on comment ch  (cost=0.42..86.95 rows=26 width=25) (actual time=0.002..0.002 rows=0 loops=21)
+                      Index Cond: (parent_id = c.id)
+                      Heap Fetches: 0
+                      Buffers: shared hit=63
+Planning:
+  Buffers: shared hit=16
+Planning Time: 0.556 ms
+Execution Time: 0.232 ms
+
+CHILD:
+Limit  (cost=1.14..84.35 rows=21 width=602) (actual time=0.043..0.102 rows=21 loops=1)
+  Buffers: shared hit=75
+  ->  Nested Loop  (cost=1.14..195139.92 rows=49247 width=602) (actual time=0.043..0.101 rows=21 loops=1)
+        Buffers: shared hit=75
+        ->  Nested Loop Left Join  (cost=0.98..9334.58 rows=49247 width=343) (actual time=0.023..0.034 rows=21 loops=1)
+              Buffers: shared hit=10
+              ->  Index Scan using comment_children_time on comment c  (cost=0.42..8702.20 rows=49247 width=85) (actual time=0.009..0.014 rows=21 loops=1)
+                    Index Cond: (parent_id = '6a758cf6-71d4-4a2d-86c8-6d3d17041bad'::uuid)
+                    Buffers: shared hit=4
+              ->  Materialize  (cost=0.56..16.80 rows=1 width=274) (actual time=0.001..0.001 rows=1 loops=21)
+                    Buffers: shared hit=6
+                    ->  Nested Loop Left Join  (cost=0.56..16.80 rows=1 width=274) (actual time=0.010..0.011 rows=1 loops=1)
+                          Buffers: shared hit=6
+                          ->  Index Scan using comment_pkey on comment p  (cost=0.42..8.44 rows=1 width=32) (actual time=0.006..0.006 rows=1 loops=1)
+                                Index Cond: (id = '6a758cf6-71d4-4a2d-86c8-6d3d17041bad'::uuid)
+                                Buffers: shared hit=4
+                          ->  Index Scan using board_user_pkey on board_user pu  (cost=0.14..8.16 rows=1 width=274) (actual time=0.004..0.004 rows=1 loops=1)
+                                Index Cond: (id = p.author_id)
+                                Buffers: shared hit=2
+        ->  Memoize  (cost=0.15..0.17 rows=1 width=274) (actual time=0.001..0.001 rows=1 loops=21)
+              Cache Key: c.author_id
+              Cache Mode: logical
+              Hits: 20  Misses: 1  Evictions: 0  Overflows: 0  Memory Usage: 1kB
+              Buffers: shared hit=2
+              ->  Index Scan using board_user_pkey on board_user u  (cost=0.14..0.16 rows=1 width=274) (actual time=0.009..0.009 rows=1 loops=1)
+                    Index Cond: (id = c.author_id)
+                    Buffers: shared hit=2
+        SubPlan 1
+          ->  Limit  (cost=0.42..3.75 rows=1 width=25) (actual time=0.002..0.002 rows=0 loops=21)
+                Buffers: shared hit=63
+                ->  Index Only Scan using comment_children_time on comment ch  (cost=0.42..86.95 rows=26 width=25) (actual time=0.002..0.002 rows=0 loops=21)
+                      Index Cond: (parent_id = c.id)
+                      Heap Fetches: 0
+                      Buffers: shared hit=63
+Planning Time: 0.303 ms
+Execution Time: 0.119 ms
